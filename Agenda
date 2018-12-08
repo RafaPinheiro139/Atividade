@@ -1,0 +1,163 @@
+public class Contato {
+	int id;
+	String nome;
+	String telefone;
+	String email;
+	
+	public Contato(int id, String nome, String telefone, String email) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.telefone = telefone;
+		this.email = email;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
+	public String toString() {
+		return "Contato [id=" + id + ", nome=" + nome + ", telefone=" + telefone + ", email=" + email + "]";
+	}
+	
+}
+
+public class MinhaException extends Exception{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public MinhaException(String str) {
+		super(str);
+	}
+}
+
+import java.util.Comparator;
+
+public class ListarId implements Comparator<Contato>{
+
+	@Override
+	public int compare(Contato c1, Contato c2) {
+		return c1.id - c2.id;
+	}
+	
+}
+
+import java.util.Comparator;
+
+public class ListarNome implements Comparator<Contato>{
+
+	@Override
+	public int compare(Contato c1, Contato c2) {
+		return c1.nome.compareTo(c2.nome);
+	}
+	
+}
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+public class Agenda {
+	Set<Contato> agenda = new HashSet<Contato>();
+	ArrayList<Contato> pessoa = new ArrayList<Contato>();
+	
+	public void inserir(Contato c) {
+		agenda.add(c);
+		pessoa.add(c);
+	}
+	
+	public void listarID() {
+		System.out.println("Listagem por ordem de ID:\n");
+		Collections.sort(pessoa, new ListarId());
+		for(int i = 0;i < pessoa.size();i++) {
+			System.out.println(pessoa.get(i));
+		}
+	}
+	
+	public void listarNOME(){
+		System.out.println("\n\nListagem por Nome em ordem alfabética:\n");
+		Collections.sort(pessoa, new ListarNome());
+		for(int i = 0;i < pessoa.size();i++) {
+			System.out.println(pessoa.get(i));
+		}
+	}
+	
+	public void remover(String str) throws MinhaException{
+		for(Contato contato : pessoa) {
+			if(contato.getNome().equals(str)) {
+				agenda.remove(contato);
+				pessoa.remove(contato);
+				System.out.println("Remoção do contato " + contato.getNome() + " feito com sucesso!");
+			}
+		}throw new MinhaException("ContatoNotFound");
+	}
+}
+
+public class AgendaApp {
+
+	public static void main(String[] args) {
+		Contato c1 = new Contato(12, "Maria", "1234567", "maria@gmail.com");
+		Contato c2 = new Contato(9, "Jorge", "1243567", "jorge@gmail.com");
+		Contato c3 = new Contato(22, "Ana Paula", "90123487", "anapaula@gmail.com");
+		Contato c4 = new Contato(35, "Zezo", "132454321", "zezo@gmail.com");
+		Contato c5 = new Contato(15, "Beto","91827463", "beto@gmail.com");
+		Agenda ag = new Agenda();
+		
+		ag.inserir(c1);
+		ag.inserir(c2);
+		ag.inserir(c3);
+		ag.inserir(c4);
+		ag.inserir(c5);
+		
+		ag.listarID();
+		ag.listarNOME();
+		
+		try {
+			ag.remover("Maria");
+		}catch(MinhaException m) {
+			m.printStackTrace();
+		}
+		
+		try {
+			ag.remover("André");
+		}catch(MinhaException e) {
+			e.printStackTrace();
+		}
+		
+		ag.listarID();
+		ag.listarNOME();
+	}
+
+}
